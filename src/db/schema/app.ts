@@ -1,0 +1,46 @@
+// write schema for application
+
+import {integer, pgTable, timestamp, varchar} from "drizzle-orm/pg-core";
+import {relations} from "drizzle-orm";
+
+const timestamps= {
+    createdAt: timestamp('created_at').defaultNow().notNull(),
+    updatedAt: timestamp('updated_at').defaultNow().$onUpdate(() => new Date()).notNull(),
+};
+
+export const departments = pgTable('departments', {
+    id:integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    code:varchar('code',{length:64}).notNull().unique(),
+    name:varchar('name',{length:255}).notNull(),
+    description:varchar('description',{length:256}),
+    ...timestamps,
+});
+
+
+export const subjects = pgTable('subjects', {
+    id:integer('id').primaryKey().generatedAlwaysAsIdentity(),
+    departmentId:integer('department_id').notNull().references(() => departments.id, {onDelete:'restrict'}),
+    code:varchar('code',{length:64}).notNull().unique(),
+    name:varchar('name',{length:255}).notNull(),
+    description:varchar('description',{length:256}),
+    ...timestamps,
+});
+
+// create relations between the tables
+export const departmentRelations= relations(departments,
+    ({many}) => ({subjects:many(subjects)}));
+
+export const subjectsRelation = relations(subjects, ({one, many}) => ({
+    department : one(departments, {
+        fields: [subjects.departmentId],
+        references: [departments.id],
+    })
+}));
+
+// ensure types in a sync with your db
+export type Department = typeof departments.$inferSelect;
+export type NewDepartment = typeof departments.$inferInsert;
+
+export type Subject = typeof departments.$inferSelect;
+export type NewSubject = typeof departments.$inferInsert;
+
