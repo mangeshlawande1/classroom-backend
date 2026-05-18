@@ -24,16 +24,16 @@ router.get("/", async (req, res) => {
 
         const MAX_LIMIT = 100;
         const parsedPage =
-            typeof page === "string" ? Number.parseInt(page, 10) : Number.NaN;
+                        typeof page === "string" ? Number.parseInt(page, 10) : Number.NaN;
         const parsedLimit =
-            typeof limit === "string" ? Number.parseInt(limit, 10) : Number.NaN;
+                        typeof limit === "string" ? Number.parseInt(limit, 10) : Number.NaN;
 
         const currentPage =
-            Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+                        Number.isFinite(parsedPage) && parsedPage > 0 ? parsedPage : 1;
         const limitPerPage =
-            Number.isFinite(parsedLimit) && parsedLimit > 0
-                ? Math.min(parsedLimit, MAX_LIMIT)
-                : 10;
+                        Number.isFinite(parsedLimit) && parsedLimit > 0
+                            ? Math.min(parsedLimit, MAX_LIMIT)
+                                : 10;
 
         const offset = (currentPage - 1) * limitPerPage;
 
