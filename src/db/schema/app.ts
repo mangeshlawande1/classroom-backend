@@ -10,10 +10,6 @@ import {
     index,
     primaryKey,
     check,
-<<<<<<< HEAD
-=======
-    sql
->>>>>>> 525416696d0ef3aadccc40794c6487ed11b9db6e
 } from "drizzle-orm/pg-core";
 import {relations, sql} from "drizzle-orm";
 import {user} from "./auth.js";
