@@ -10,9 +10,8 @@ import {
     index,
     primaryKey,
     check,
-    sql
 } from "drizzle-orm/pg-core";
-import {relations} from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {user} from "./auth.js";
 
 export const classStatusEnum = pgEnum('class_status', ['active', 'inactive', 'archived']);
