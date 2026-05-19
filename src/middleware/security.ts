@@ -2,11 +2,9 @@ import type {NextFunction, Request, Response } from "express";
 import aj from "../config/arcjet";
 import {ArcjetNodeRequest, slidingWindow} from "@arcjet/node";
 
-class RateLimitRole {
-}
 
 const securityMiddleware = async(req:Request,res:Response, next : NextFunction) => {
-        if(process.env.NODE_ENV !== 'test') return next();
+        if(process.env.NODE_ENV === 'test') return next();
 
         try{
             const role : RateLimitRole = req.user?.role ?? "guest";
@@ -22,7 +20,7 @@ const securityMiddleware = async(req:Request,res:Response, next : NextFunction) 
                 case 'teacher':
                 case 'student':
                     limit=10;
-                    message = "Admin limit Request Exceeded(20 per minute) Please wait";
+                    message = "Teacher/Student request limit exceeded (10 per minute). Please wait.";
                     break;
                     default:
                         limit=5;
@@ -49,7 +47,7 @@ const securityMiddleware = async(req:Request,res:Response, next : NextFunction) 
                 return res.status(403).json({error: "Forbidden", message:"Automated Request are not allowed. "});
             }
             if(decision.isDenied() && decision.reason.isRateLimit()) {
-                return res.status(403).json({error: "Too many Requests. ", message:message });
+                return res.status(429).json({error: "Too many Requests. ", message:message });
             }
             if(decision.isDenied() && decision.reason.isShield()) {
                 return res.status(403).json({error: "Forbidden", message:"Request is blocked by Security policy."});

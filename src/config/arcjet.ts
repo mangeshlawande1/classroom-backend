@@ -1,10 +1,13 @@
 import arcjet, {shield, detectBot, slidingWindow } from "@arcjet/node";
 
-if(!process.env.ARCJET_KEY && process.env.NODE_ENV !=='test') {
+const isTest = process.env.NODE_ENV === "test";
+const arcjetKey = process.env.ARCJET_KEY;
+
+    if(!arcjetKey && !isTest) {
     throw new Error("ARCJET_KEY env is required! ");
 }
 const aj = arcjet({
-    key: process.env.ARCJET_KEY!,
+        key: arcjetKey ?? "test-key",
 
     rules: [
         shield({ mode: "LIVE" }),
